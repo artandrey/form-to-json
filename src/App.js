@@ -1,25 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Form from './Form';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { resultJson: '' };
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.defaultValue = `{
+          "blocks": [
+           {
+            "key": "1kdsb",
+            "text": "Default text from App component",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [],
+            "entityRanges": [],
+            "data": {}
+           },
+           {
+            "key": "2ipln",
+            "text": "",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [],
+            "entityRanges": [],
+            "data": {}
+           },
+           {
+            "key": "2glph",
+            "text": "Formetted and with emojis 👍",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [],
+            "entityRanges": [],
+            "data": {}
+           }
+          ],
+          "entityMap": {}
+         }`;
+    }
+    handleFormSubmit(json) {
+        this.setState({ resultJson: json });
+    }
+    render() {
+        return (
+            <div>
+                <Form
+                    content={this.defaultValue}
+                    handleSubmit={this.handleFormSubmit}
+                />
+                <pre>{this.state.resultJson}</pre>
+            </div>
+        );
+    }
 }
 
 export default App;
