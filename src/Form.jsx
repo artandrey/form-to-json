@@ -28,10 +28,7 @@ const Form = ({ content, onSubmit }) => {
         <form onSubmit={handleFormSubmit}>
             <h1>Editor</h1>
             <div style={{ border: 'solid 1px black' }}>
-                <Editor
-                    editorState={this.state.editorState}
-                    onChange={setEditorValue}
-                />
+                <Editor editorState={editorValue} onChange={setEditorValue} />
             </div>
             <button>Save</button>
         </form>
