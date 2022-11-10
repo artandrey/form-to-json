@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import Form from './Form';
-
+import rawJsonToHTML from './converters/raw-json-to-html';
 const App = () => {
     const defaultValue = `{
     "blocks": [
@@ -35,9 +35,12 @@ const App = () => {
     "entityMap": {}
    }`;
     const [jsonValue, setJsonValue] = useState(defaultValue);
+
     const handleFormSubmit = useCallback(
         (json) => {
             setJsonValue(json);
+            console.log(rawJsonToHTML(json));
+            // SEND TO DB TUT
         },
         [setJsonValue]
     );
