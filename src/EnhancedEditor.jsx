@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { EditorState, Editor, convertFromRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import getRawJSONStringFromEditorState from './converters/raw-json-from-draft-state';
@@ -13,26 +13,29 @@ const initEditorState = (content) => {
     }
 };
 
-const Form = ({ content, onSubmit }) => {
+const EnhancedEditor = ({ content, onChange }) => {
     const [editorValue, setEditorValue] = useState(initEditorState(content));
-    const handleFormSubmit = useCallback(
-        (event) => {
-            event.preventDefault();
-            const json = getRawJSONStringFromEditorState(editorValue);
-            onSubmit && onSubmit(json);
+    const handleChange = useCallback(
+        (editorValue) => {
+            setEditorValue(editorValue);
+            onChange && onChange(editorValue);
         },
-        [editorValue, onSubmit]
+        [onChange]
     );
 
+    useEffect(() => {
+        setEditorValue(initEditorState(content));
+    }, [setEditorValue, content]);
+
     return (
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleChange}>
             <h1>Editor</h1>
             <div style={{ border: 'solid 1px black' }}>
-                <Editor editorState={editorValue} onChange={setEditorValue} />
+                <Editor editorState={editorValue} onChange={handleChange} />
             </div>
             <button>Save</button>
         </form>
     );
 };
 
-export default Form;
+export default EnhancedEditor;
