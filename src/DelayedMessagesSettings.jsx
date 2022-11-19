@@ -106,7 +106,7 @@ const DelayedMessagesSettings = ({ messages: messagesList }) => {
             <Droppable droppableId="messages-list">
                 {({ innerRef, droppableProps, placeholder }) => (
                     <div ref={innerRef} {...droppableProps}>
-                        <DelayedMessagesList messages={messages} />
+                        <DelayedMessagesList messages={orderedMessages} />
                         {placeholder}
                     </div>
                 )}
