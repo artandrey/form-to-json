@@ -1,10 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import Form from './EnhancedEditor';
-import rawJsonToHTML from './converters/raw-json-to-html';
-import MOCK_DELAYED_MESSAGES from './mock-data/delayed-messages.json';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import DelayedMessagesSettings from './DelayedMessagesSettings';
 import initEditorState from './converters/init-editor-state';
 import getRawJSONStringFromEditorState from './converters/raw-json-from-draft-state';
+import useFetchCall from './hooks/useFetchCall';
 
 const normalizeAPIDelayedMessagesData = (apiData) => {
     const result = {};
@@ -43,29 +41,52 @@ const convertDelayedMessagesListToValidAPIData = (messages) => {
 
     return result;
 };
+
+const fetchDelayedMessages = function () {
+    return fetch('/mock-data/delayed-messages.json');
+};
+
+const updateMessages = function (messages) {
+    return fetch('/update', { method: 'POST', body: JSON.stringify(messages) });
+};
+
 const App = () => {
-    const delayedMessages = useMemo(
-        () =>
-            normalizeAPIDelayedMessagesData(MOCK_DELAYED_MESSAGES).map(
-                ({ message, ...other }) => ({
-                    message: initEditorState(message),
-                    ...other,
-                })
-            ),
-        []
+    const { send: sendGETMessagesRequest, data: messagesResponce } =
+        useFetchCall(fetchDelayedMessages);
+
+    const { send: updateMessagesDelay } = useFetchCall(updateMessages, () =>
+        alert('Request finished')
     );
 
-    const handleMessageSettinsSave = useCallback((messages) => {
-        const messagesWithJSONContent = messages.map(
+    useEffect(() => {
+        sendGETMessagesRequest();
+    }, [sendGETMessagesRequest]);
+
+    const delayedMessages = useMemo(() => {
+        if (!messagesResponce) return [];
+        return normalizeAPIDelayedMessagesData(messagesResponce).map(
             ({ message, ...other }) => ({
-                message: getRawJSONStringFromEditorState(message),
+                message: initEditorState(message),
                 ...other,
             })
         );
-        const dataForAPI = convertDelayedMessagesListToValidAPIData(
-            messagesWithJSONContent
-        );
-    }, []);
+    }, [messagesResponce]);
+
+    const handleMessageSettinsSave = useCallback(
+        (messages) => {
+            const messagesWithJSONContent = messages.map(
+                ({ message, ...other }) => ({
+                    message: getRawJSONStringFromEditorState(message),
+                    ...other,
+                })
+            );
+            const dataForAPI = convertDelayedMessagesListToValidAPIData(
+                messagesWithJSONContent
+            );
+            updateMessagesDelay(dataForAPI);
+        },
+        [updateMessagesDelay]
+    );
     return (
         <div>
             {/* <Form content={jsonValue} onSubmit={handleFormSubmit} /> */}

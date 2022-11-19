@@ -33,7 +33,6 @@ const DelayedMessageItem = React.forwardRef((props, ref) => {
         },
         [onMessageChnage, ID]
     );
-    console.log(invalidDelay);
     return (
         <div className="message-item" {...otherProps} ref={ref}>
             <span>Debug id: {ID}</span>
@@ -107,6 +106,9 @@ const DelayedMessagesSettings = ({
 }) => {
     const [messages, setMessages] = useState(messagesList);
 
+    useEffect(() => {
+        setMessages(messagesList);
+    }, [messagesList]);
     const updateMessageFieldsById = useCallback(
         (ID, fieldsToUpdate = {}) => {
             setMessages((messages) => {

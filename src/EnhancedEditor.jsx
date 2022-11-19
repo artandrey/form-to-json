@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { EditorState, Editor, convertFromRaw } from 'draft-js';
+import React from 'react';
+import { Editor } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import getRawJSONStringFromEditorState from './converters/raw-json-from-draft-state';
 import initEditorState from './converters/init-editor-state';
 
 const EnhancedEditor = ({ content, onChange }) => {
