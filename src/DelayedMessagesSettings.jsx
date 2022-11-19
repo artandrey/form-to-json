@@ -1,13 +1,8 @@
-<<<<<<< HEAD
-import React, { useCallback } from 'react';
-=======
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
->>>>>>> 1924413ebb1562e00cd80f25d587c3035ae24d36
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import EnhancedEditor from './EnhancedEditor';
 
 const DelayedMessageItem = React.forwardRef((props, ref) => {
-<<<<<<< HEAD
     const {
         message,
         message_delay,
@@ -31,10 +26,6 @@ const DelayedMessageItem = React.forwardRef((props, ref) => {
         },
         [onMessageChnage]
     );
-=======
-    const { message, message_delay, ID, ...otherProps } = props;
-    console.log(message, message_delay);
->>>>>>> 1924413ebb1562e00cd80f25d587c3035ae24d36
     return (
         <div className="message-item" {...otherProps} ref={ref}>
             <span>Debug id: {ID}</span>
@@ -42,10 +33,7 @@ const DelayedMessageItem = React.forwardRef((props, ref) => {
             <input
                 min={0}
                 type="number"
-<<<<<<< HEAD
                 onChange={handleDelayInputChange}
-=======
->>>>>>> 1924413ebb1562e00cd80f25d587c3035ae24d36
                 value={message_delay}
                 name=""
                 id=""
