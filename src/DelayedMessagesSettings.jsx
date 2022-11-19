@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import EnhancedEditor from './EnhancedEditor';
 
@@ -35,19 +35,43 @@ const DelayedMessageListItem = (props) => {
     );
 };
 
-const DelayedMessagesList = ({ messages = [] }) => {
+const DelayedMessagesList = ({ messages = [], onMessageDelayChange, onMessageContentChange }) => {
     return messages.map((message, index) => (
         <DelayedMessageListItem index={index} key={message.ID} {...message} />
     ));
 };
 
-const DelayedMessagesSettings = ({ messages }) => {
+const DelayedMessagesSettings = ({ messages: messagesList }) => {
+    const [messages, setMessages] = useState(messagesList);
+    
+    const updateMessageFieldsById = useCallback((ID, fieldsToUpdate = {}) => {
+        setMessages(messages => {
+            const changedMessages = [...messages];
+            const messageToUpdate = changedMessages.find(message => message.ID === ID);
+            messageToUpdate = {...messageToUpdate, fieldsToUpdate};
+        });
+    }, [setMessages]);
+
+
+    const handleMessageContentChange = useCallback((content, ID) => {
+        updateMessageFieldsById(ID, {message: content});
+    }, [updateMessageFieldsById]);
+    const handleMessageDelayChange = useCallback((delay, ID) => {
+        updateMessageFieldsById(ID, {message_delay: delay});
+    }, [updateMessageFieldsById]);
+
+    
+
+    const orderedMessages = useMemo(() => {
+        return messages.sort((messageA, messageB) => messageA.message_delay - messageB.message_delay)
+    }, [messages]);
+
     return (
         <DragDropContext>
             <Droppable droppableId="messages-list">
                 {({ innerRef, droppableProps, placeholder }) => (
                     <div ref={innerRef} {...droppableProps}>
-                        <DelayedMessagesList messages={messages} />
+                        <DelayedMessagesList messages={orderedMessages} />
                         {placeholder}
                     </div>
                 )}
