@@ -3,6 +3,8 @@ import Form from './EnhancedEditor';
 import rawJsonToHTML from './converters/raw-json-to-html';
 import MOCK_DELAYED_MESSAGES from './mock-data/delayed-messages.json';
 import DelayedMessagesSettings from './DelayedMessagesSettings';
+import initEditorState from './converters/init-editor-state';
+import getRawJSONStringFromEditorState from './converters/raw-json-from-draft-state';
 
 const normalizeAPIDelayedMessagesData = (apiData) => {
     const result = {};
@@ -29,16 +31,48 @@ const normalizeAPIDelayedMessagesData = (apiData) => {
     }
     return Object.entries(result).map(([id, data]) => ({ ID: id, ...data }));
 };
+
+const convertDelayedMessagesListToValidAPIData = (messages) => {
+    const result = {};
+    messages.forEach((item) => {
+        const { ID, message, message_delay } = item;
+
+        result['message' + ID] = message;
+        result['message_delay' + ID] = message_delay;
+    });
+
+    return result;
+};
 const App = () => {
     const delayedMessages = useMemo(
-        () => normalizeAPIDelayedMessagesData(MOCK_DELAYED_MESSAGES),
+        () =>
+            normalizeAPIDelayedMessagesData(MOCK_DELAYED_MESSAGES).map(
+                ({ message, ...other }) => ({
+                    message: initEditorState(message),
+                    ...other,
+                })
+            ),
         []
     );
-    console.log(delayedMessages);
+
+    const handleMessageSettinsSave = useCallback((messages) => {
+        const messagesWithJSONContent = messages.map(
+            ({ message, ...other }) => ({
+                message: getRawJSONStringFromEditorState(message),
+                ...other,
+            })
+        );
+        const dataForAPI = convertDelayedMessagesListToValidAPIData(
+            messagesWithJSONContent
+        );
+    }, []);
     return (
         <div>
             {/* <Form content={jsonValue} onSubmit={handleFormSubmit} /> */}
-            <DelayedMessagesSettings messages={delayedMessages} />
+            <DelayedMessagesSettings
+                messages={delayedMessages}
+                handleMessageSettingsChange={handleMessageSettinsSave}
+            />
         </div>
     );
 };
