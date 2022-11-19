@@ -58,7 +58,7 @@ const DelayedMessageListItem = (props) => {
     );
 };
 
-const DelayedMessagesList = ({ messages = [], onMessageDelayChange, onMessageContentChange }) => {
+const DelayedMessagesList = ({ messages = [] }) => {
     return messages.map((message, index) => (
         <DelayedMessageListItem index={index} key={message.ID} {...message} />
     ));
@@ -106,7 +106,7 @@ const DelayedMessagesSettings = ({ messages: messagesList }) => {
             <Droppable droppableId="messages-list">
                 {({ innerRef, droppableProps, placeholder }) => (
                     <div ref={innerRef} {...droppableProps}>
-                        <DelayedMessagesList messages={orderedMessages} />
+                        <DelayedMessagesList messages={messages} />
                         {placeholder}
                     </div>
                 )}
