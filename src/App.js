@@ -1,58 +1,46 @@
-import React from 'react';
-import Form from './Form';
+import React, { useCallback, useMemo, useState } from 'react';
+import Form from './EnhancedEditor';
+import rawJsonToHTML from './converters/raw-json-to-html';
+import MOCK_DELAYED_MESSAGES from './mock-data/delayed-messages.json';
+import DelayedMessagesSettings from './DelayedMessagesSettings';
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { resultJson: '' };
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.defaultValue = `{
-          "blocks": [
-           {
-            "key": "1kdsb",
-            "text": "Default text from App component",
-            "type": "unstyled",
-            "depth": 0,
-            "inlineStyleRanges": [],
-            "entityRanges": [],
-            "data": {}
-           },
-           {
-            "key": "2ipln",
-            "text": "",
-            "type": "unstyled",
-            "depth": 0,
-            "inlineStyleRanges": [],
-            "entityRanges": [],
-            "data": {}
-           },
-           {
-            "key": "2glph",
-            "text": "Formetted and with emojis 👍",
-            "type": "unstyled",
-            "depth": 0,
-            "inlineStyleRanges": [],
-            "entityRanges": [],
-            "data": {}
-           }
-          ],
-          "entityMap": {}
-         }`;
+const normalizeAPIDelayedMessagesData = (apiData) => {
+    const result = {};
+    const messageKeyRegEx = new RegExp(/message\d+/);
+    const messageDelayKeyRegEx = new RegExp(/message_delay\d+/);
+
+    const getIdFromKey = (key) => {
+        if (messageKeyRegEx.test(key)) {
+            return { id: key.replace('message', ''), accessor: 'message' };
+        }
+        if (messageDelayKeyRegEx.test(key)) {
+            return {
+                id: key.replace('message_delay', ''),
+                accessor: 'message_delay',
+            };
+        }
+    };
+    for (const key in apiData) {
+        const value = apiData[key];
+        const { id, accessor } = getIdFromKey(key);
+        result[id] = result[id]
+            ? { ...result[id], [accessor]: value }
+            : { [accessor]: value };
     }
-    handleFormSubmit(json) {
-        this.setState({ resultJson: json });
-    }
-    render() {
-        return (
-            <div>
-                <Form
-                    content={this.defaultValue}
-                    handleSubmit={this.handleFormSubmit}
-                />
-                <pre>{this.state.resultJson}</pre>
-            </div>
-        );
-    }
-}
+    return Object.entries(result).map(([id, data]) => ({ ID: id, ...data }));
+};
+const App = () => {
+    const delayedMessages = useMemo(
+        () => normalizeAPIDelayedMessagesData(MOCK_DELAYED_MESSAGES),
+        []
+    );
+    console.log(delayedMessages);
+    return (
+        <div>
+            {/* <Form content={jsonValue} onSubmit={handleFormSubmit} /> */}
+            <DelayedMessagesSettings messages={delayedMessages} />
+        </div>
+    );
+};
 
 export default App;
