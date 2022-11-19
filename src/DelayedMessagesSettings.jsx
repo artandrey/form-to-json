@@ -35,7 +35,6 @@ const DelayedMessageItem = React.forwardRef((props, ref) => {
     );
     return (
         <div className="message-item" {...otherProps} ref={ref}>
-            <span>Debug id: {ID}</span>
             <EnhancedEditor onChange={handleMessageChange} content={message} />
             <input
                 style={{
@@ -185,13 +184,21 @@ const DelayedMessagesSettings = ({
 
     return (
         <form onSubmit={handleFormSubmit}>
-            <button disabled={repeatingDelay.length} type="submit">
+            <button
+                className="save-button"
+                disabled={repeatingDelay.length}
+                type="submit"
+            >
                 Save
             </button>
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="messages-list">
                     {({ innerRef, droppableProps, placeholder }) => (
-                        <div ref={innerRef} {...droppableProps}>
+                        <div
+                            className="messages-wrapper"
+                            ref={innerRef}
+                            {...droppableProps}
+                        >
                             <DelayedMessagesList
                                 messages={orderedMessages}
                                 repeatingDelays={repeatingDelay}

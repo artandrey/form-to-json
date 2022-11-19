@@ -12,12 +12,42 @@ code {
         monospace;
 }
 
+.messages-wrapper {
+    margin: 0 auto;
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+}
 .message-item {
-    padding: 10px 20px;
+    margin-bottom: 20px;
+    padding: 20px 20px;
     border-radius: 20px;
-    box-shadow: black 0 0 5px 0;
+    box-shadow: rgba(0, 0, 0, 0.288) 0 0 5px 0;
     background-color: #fff;
     display: flex;
     flex-direction: row;
     gap: 10px;
+}
+
+.save-button {
+    margin: 20px auto;
+    padding: 20px;
+    min-width: 240px;
+    display: block;
+    background-color: rgb(53, 175, 53);
+    font-size: 20px;
+    color: #fff;
+    border-color: #222;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: rgb(58, 196, 58);
+}
+
+.save-button:disabled {
+    background-color: rgb(124, 124, 124);
 }
