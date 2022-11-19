@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import Form from './EnhancedEditor';
 import rawJsonToHTML from './converters/raw-json-to-html';
 import MOCK_DELAYED_MESSAGES from './mock-data/delayed-messages.json';
+import DelayedMessagesSettings from './DelayedMessagesSettings';
 
 const normalizeAPIDelayedMessagesData = (apiData) => {
     const result = {};
@@ -26,7 +27,7 @@ const normalizeAPIDelayedMessagesData = (apiData) => {
             ? { ...result[id], [accessor]: value }
             : { [accessor]: value };
     }
-    return Object.entries(result).map(([id, data]) => ({ id, ...data }));
+    return Object.entries(result).map(([id, data]) => ({ ID: id, ...data }));
 };
 const App = () => {
     const delayedMessages = useMemo(
@@ -37,6 +38,7 @@ const App = () => {
     return (
         <div>
             {/* <Form content={jsonValue} onSubmit={handleFormSubmit} /> */}
+            <DelayedMessagesSettings messages={delayedMessages} />
         </div>
     );
 };

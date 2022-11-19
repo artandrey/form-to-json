@@ -28,13 +28,9 @@ const EnhancedEditor = ({ content, onChange }) => {
     }, [setEditorValue, content]);
 
     return (
-        <form onSubmit={handleChange}>
-            <h1>Editor</h1>
-            <div style={{ border: 'solid 1px black' }}>
-                <Editor editorState={editorValue} onChange={handleChange} />
-            </div>
-            <button>Save</button>
-        </form>
+        <div className="editor-wrapper" style={{ border: 'solid 1px black' }}>
+            <Editor editorState={editorValue} onChange={handleChange} />
+        </div>
     );
 };
 
