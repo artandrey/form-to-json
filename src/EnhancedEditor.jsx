@@ -4,6 +4,7 @@ import 'draft-js/dist/Draft.css';
 import getRawJSONStringFromEditorState from './converters/raw-json-from-draft-state';
 
 const initEditorState = (content) => {
+    if (content instanceof EditorState) return content;
     if (content) {
         return EditorState.createWithContent(
             convertFromRaw(JSON.parse(content))
