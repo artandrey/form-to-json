@@ -14,7 +14,7 @@ code {
 
 .messages-wrapper {
     margin: 0 auto;
-    width: 550px;
+    max-width: 550px;
     display: flex;
     flex-direction: column;
 }

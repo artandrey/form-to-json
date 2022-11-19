@@ -36,18 +36,21 @@ const DelayedMessageItem = React.forwardRef((props, ref) => {
     return (
         <div className="message-item" {...otherProps} ref={ref}>
             <EnhancedEditor onChange={handleMessageChange} content={message} />
-            <input
-                style={{
-                    borderColor: invalidDelay ? 'red' : 'black',
-                    borderWidth: '4px',
-                }}
-                min={0}
-                type="number"
-                onChange={handleDelayInputChange}
-                value={delay}
-                name=""
-                id=""
-            />
+            <div>
+                <h3>Message delay:</h3>
+                <input
+                    style={{
+                        borderColor: invalidDelay ? 'red' : 'black',
+                        borderWidth: '4px',
+                    }}
+                    min={0}
+                    type="number"
+                    onChange={handleDelayInputChange}
+                    value={delay}
+                    name=""
+                    id=""
+                />
+            </div>
         </div>
     );
 });
